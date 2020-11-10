@@ -1,18 +1,28 @@
-import { Flex, Box, Heading, Link, Text, Button } from '@chakra-ui/core';
+import { useUser } from '../lib/hooks'
+import { useRouter } from 'next/router'
 
-export default function Home() {
+const Home = () => {
+  const user = useUser()
+  const router = useRouter()
+  if (!user && process.browser){
+    router.push('/login')
+  }
   return (
-    <Flex direction="column" align="center" justify="center" h="screen" py={8}>
-      <Heading fontWeight="semibold">
-        Welcome to <Link href="https://nextjs.org">Next Chakra Starter</Link>
-      </Heading>
+    <>
+      {user && (
+        <>
+          <p>Currently logged in as:</p>
+          <pre>{JSON.stringify(user, null, 2)}</pre>
+        </>
+      )}
 
-      <Text fontSize="2xl" mt={3}>
-        Get started by editing{' '}
-        <Box as="code" bg="indigo.300" borderRadius="md" fontSize="md" p={2}>
-          pages/index.js
-        </Box>
-      </Text>
-    </Flex>
-  );
+      <style jsx>{`
+        li {
+          margin-bottom: 0.5rem;
+        }
+      `}</style>
+    </>
+  )
 }
+
+export default Home

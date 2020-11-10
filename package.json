@@ -1,9 +1,7 @@
 {
-  "name": "next-chakra-starter",
-  "version": "0.1.0",
-  "private": true,
+  "name": "asclepius",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next",
     "build": "next build",
     "start": "next start"
   },
@@ -11,12 +9,14 @@
     "@chakra-ui/core": "1.0.0-rc.5",
     "@chakra-ui/theme": "1.0.0-rc.5",
     "@chakra-ui/theme-tools": "1.0.0-rc.5",
-    "lodash.debounce": "4.0.8",
-    "next": "9.5.5",
-    "next-google-fonts": "1.2.1",
-    "next-seo": "4.7.3",
-    "nprogress": "0.2.0",
-    "react": "16.13.1",
-    "react-dom": "16.13.1"
-  }
+    "@hapi/iron": "6.0.0",
+    "@magic-sdk/admin": "1.0.0",
+    "cookie": "0.4.0",
+    "magic-sdk": "1.0.1",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "swr": "0.1.16"
+  },
+  "license": "MIT"
 }
