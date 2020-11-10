@@ -1,5 +1,6 @@
 import { useUser } from "../lib/hooks";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import {
   Container,
   Center,
@@ -30,6 +31,9 @@ const Home = () => {
   }
   return (
     <>
+      <Head>
+        <title>Asclepius Dashboard</title>
+      </Head>
       {user && (
         <Container maxW="xl" pt={100}>
           <Heading pb={6}>👋 Welcome Nodemaster</Heading>
@@ -41,7 +45,13 @@ const Home = () => {
           </Text>
           <hr style={{ paddingBottom: "10px", paddingTop: "10px" }} />
           <Flex>
-            <Box maxW="sm" borderWidth="1px" rounded="lg" overflow="hidden" mr={10}>
+            <Box
+              maxW="sm"
+              borderWidth="1px"
+              rounded="lg"
+              overflow="hidden"
+              mr={10}
+            >
               <Image
                 objectFit="cover"
                 w="100%"
@@ -85,7 +95,19 @@ const Home = () => {
             </Box>
           </Flex>
           <hr style={{ marginBottom: "10px", marginTop: "20px" }} />
-          <Text>© Asclepius 2020{'⠀'}|{'⠀'}<Link href="https://github.com/sampoder/asclepius-backend" color="blue.500">Source</Link>{'⠀'}|{'⠀'}Images from <Link href="https://unsplash.com" color="blue.500">Unsplash</Link></Text>
+          <Text>
+            © Asclepius 2020{"⠀"}|{"⠀"}
+            <Link
+              href="https://github.com/sampoder/asclepius-backend"
+              color="blue.500"
+            >
+              Source
+            </Link>
+            {"⠀"}|{"⠀"}Images from{" "}
+            <Link href="https://unsplash.com" color="blue.500">
+              Unsplash
+            </Link>
+          </Text>
         </Container>
       )}
 
