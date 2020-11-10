@@ -1,6 +1,6 @@
 import { useUser } from "../lib/hooks";
 import { useRouter } from "next/router";
-import { Container, Center } from "@chakra-ui/core";
+import { Container, Center, Heading, Text } from "@chakra-ui/core";
 
 const Home = () => {
   const user = useUser();
@@ -13,7 +13,8 @@ const Home = () => {
       {user && (
         <Center h="100vh">
           <Container maxW="xl">
-            <p>Currently logged in as:</p>
+            <Heading pb={8}>👋 Welcome Nodemaster</Heading>
+            <Text pb={9}>Currently logged in as:</Text>
             <pre>{JSON.stringify(user, null, 2)}</pre>
           </Container>
         </Center>
@@ -22,6 +23,11 @@ const Home = () => {
       <style jsx>{`
         li {
           margin-bottom: 0.5rem;
+        }
+        pre {
+          background: #EDF2F7;
+          padding: 15px;
+          border-radius: 10px;
         }
       `}</style>
     </>
