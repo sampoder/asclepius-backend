@@ -13,9 +13,9 @@ const Home = () => {
       {user && (
         <Center h="100vh">
           <Container maxW="xl">
-            <Heading pb={8}>👋 Welcome Nodemaster</Heading>
+            <Heading pb={6}>👋 Welcome Nodemaster</Heading>
             <Text pb={9}>Currently logged in as:</Text>
-            <pre>{JSON.stringify(user, null, 2)}</pre>
+            <Text pt={9}><pre>{JSON.stringify(user, null, 2)}</pre></Text>
           </Container>
         </Center>
       )}
