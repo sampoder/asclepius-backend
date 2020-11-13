@@ -13,6 +13,7 @@ import {
   Link,
   Badge,
   Stat,
+  ButtonGroup,
   Flex,
   StatLabel,
   StatNumber,
@@ -51,6 +52,10 @@ const Home = () => {
               rounded="lg"
               overflow="hidden"
               mr={10}
+              as="a"
+              href="/send"
+              transition="all .2s ease-in-out"
+              _hover={{ transform: "scale(1.02)" }}
             >
               <Image
                 objectFit="cover"
@@ -64,15 +69,23 @@ const Home = () => {
                 <Box
                   mt="1"
                   fontWeight="semibold"
-                  as="h4"
+                  as="h3"
+                  fontSize={20}
                   lineHeight="tight"
                   isTruncated
                 >
-                  Send Packages
+                  Send Packages →
                 </Box>
               </Box>
             </Box>
-            <Box maxW="sm" borderWidth="1px" rounded="lg" overflow="hidden">
+            <Box
+              maxW="sm"
+              borderWidth="1px"
+              rounded="lg"
+              overflow="hidden"
+              transition="all .2s ease-in-out"
+              _hover={{ transform: "scale(1.02)" }}
+            >
               <Image
                 objectFit="cover"
                 w="100%"
@@ -85,11 +98,12 @@ const Home = () => {
                 <Box
                   mt="1"
                   fontWeight="semibold"
-                  as="h4"
+                  as="h3"
+                  fontSize={20}
                   lineHeight="tight"
                   isTruncated
                 >
-                  Track Packages
+                  Track Packages →
                 </Box>
               </Box>
             </Box>
