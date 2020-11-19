@@ -5,25 +5,14 @@ const deta = Deta(process.env.DETA_KEY);
 
 const db = deta.Base("shipments");
 
+const packageDB = deta.Base("packages");
+
+const Easypost = require("@easypost/api");
+
+const api = new Easypost(process.env.EASYPOST_KEY);
+
+
 export default async function login(req, res) {
-  /*await db.put({
-    name: "Blank",
-    streetLineOne: "Blank",
-    streetLineTwo: "Blank",
-    streetLineOne: "Blank",
-    city: "Blank",
-    state: "Blank",
-    country: "Blank",
-    postCode: "Blank",
-    phoneNumber: "Blank",
-    packageType: "Blank",
-    dateRequested: new Date(),
-    dateShipped: "Blank",
-    dateArrived: "Blank",
-    shipped: false,
-    arrived: false,
-    comment: "Blank",
-  }); */
   const items = (await db.fetch({ shipped: false }).next()).value;
   let item;
   if (items.length > 0) {
@@ -31,6 +20,59 @@ export default async function login(req, res) {
   } else {
     item = { unavailable: true };
   }
-  console.log(item);
-  res.json(item);
+  const packageToSend = (await packageDB.fetch({ name: item.name}).next()).value[0];
+  const fromAddress = await new api.Address({
+    company: "Example",
+    street1: "417 Montgomery Street",
+    street2: "5th Floor",
+    city: "San Francisco",
+    state: "CA",
+    zip: "94104",
+    phone: "415-528-7555",
+  });
+
+  await fromAddress
+    .save()
+    .then(console.log)
+    .catch((e) => {
+      console.log(e);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
+  const toAddress = await new api.Address({
+    name: item.name,
+    street1: item.streetLineOne,
+    street2: item.streetLineTwo? item.streetLineTwo :'',
+    city: item.city,
+    state: item.state,
+    zip: item.postCode,
+    country: item.country
+  });
+
+  await toAddress.save().then(console.log);
+
+  const parcel = await new api.Parcel({
+    length: 9,
+    width: 6,
+    height: 2,
+    weight: 10,
+  });
+
+  await parcel.save().then(console.log);
+
+  const shipment = await new api.Shipment({
+    to_address: toAddress,
+    from_address: fromAddress,
+    parcel: parcel,
+  });
+
+  await shipment.save().then(console.log);
+
+  await shipment
+    .buy(shipment.lowestRate(["USPS"], ["First"]))
+    .then(console.log);
+
+  res.json({"item": item, "package": packageToSend, "packageLabelURL": shipment.postage_label.label_url});
 }
