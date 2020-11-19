@@ -11,7 +11,6 @@ const Easypost = require("@easypost/api");
 
 const api = new Easypost(process.env.EASYPOST_KEY);
 
-
 export default async function login(req, res) {
   const items = (await db.fetch({ shipped: false }).next()).value;
   let item;
@@ -20,7 +19,8 @@ export default async function login(req, res) {
   } else {
     item = { unavailable: true };
   }
-  const packageToSend = (await packageDB.fetch({ name: item.name}).next()).value[0];
+  const packageToSend = (await packageDB.fetch({ name: item.packageType }).next())
+    .value[0];
   const fromAddress = await new api.Address({
     company: "Example",
     street1: "417 Montgomery Street",
@@ -31,27 +31,19 @@ export default async function login(req, res) {
     phone: "415-528-7555",
   });
 
-  await fromAddress
-    .save()
-    .then(console.log)
-    .catch((e) => {
-      console.log(e);
-    })
-    .catch((e) => {
-      console.log(e);
-    });
+  await fromAddress.save();
 
   const toAddress = await new api.Address({
     name: item.name,
     street1: item.streetLineOne,
-    street2: item.streetLineTwo? item.streetLineTwo :'',
+    street2: item.streetLineTwo ? item.streetLineTwo : "",
     city: item.city,
     state: item.state,
     zip: item.postCode,
-    country: item.country
+    country: item.country,
   });
 
-  await toAddress.save().then(console.log);
+  await toAddress.save();
 
   const parcel = await new api.Parcel({
     length: 9,
@@ -60,7 +52,7 @@ export default async function login(req, res) {
     weight: 10,
   });
 
-  await parcel.save().then(console.log);
+  await parcel.save();
 
   const shipment = await new api.Shipment({
     to_address: toAddress,
@@ -68,11 +60,12 @@ export default async function login(req, res) {
     parcel: parcel,
   });
 
-  await shipment.save().then(console.log);
+  // await shipment.save().then(console.log);
 
-  await shipment
-    .buy(shipment.lowestRate(["USPS"], ["First"]))
-    .then(console.log);
+  // await shipment
+  //  .buy(shipment.lowestRate(["USPS"], ["First"]))
+  // .then(console.log);
+  console.log(packageToSend);
 
-  res.json({"item": item, "package": packageToSend, "packageLabelURL": shipment.postage_label.label_url});
+  res.json({ item: item, package: packageToSend, packageLabelURL: "hi" });
 }

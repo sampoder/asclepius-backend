@@ -20,6 +20,7 @@
     "react": "latest",
     "react-dom": "latest",
     "react-loader-spinner": "^3.1.14",
+    "react-to-print": "^2.11.0",
     "swr": "^0.3.8"
   },
   "license": "MIT"

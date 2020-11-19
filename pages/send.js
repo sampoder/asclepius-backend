@@ -17,6 +17,7 @@ import {
   AccordionIcon,
   Link,
   Badge,
+  SimpleGrid,
   Stat,
   ButtonGroup,
   Flex,
@@ -28,13 +29,30 @@ import {
   Grid,
   GridItem,
 } from "@chakra-ui/core";
+import { useState } from "react";
 import Loader from "react-loader-spinner";
 import useSWR, { mutate } from "swr";
+import React, { useRef } from "react";
+import ReactToPrint from "react-to-print";
+
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
+class ComponentToPrint extends React.PureComponent {
+  render() {
+    return( <SimpleGrid columns={2} spacing={10}>
+      <img src="https://easypost-files.s3-us-west-2.amazonaws.com/files/postage_label/20201119/69c72a2cae304c97afc10279b31cb279.png" />
+      <Box>
+        <h1 style={{ fontWeight: '800', fontSize: '40px'}}>SCAN THIS QR CODE TO SUBMIT DATA.</h1>
+      </Box>
+    </SimpleGrid>)
+  }
+}
+
 const Home = () => {
+  const componentRef = useRef();
   const user = useUser();
   const router = useRouter();
-
+  let [submitted, setSubmitted] = useState(false);
   const { data, error } = useSWR("/api/send", fetcher);
   if (error) return <div>failed to load</div>;
   if (!data)
@@ -51,7 +69,6 @@ const Home = () => {
         </Center>
       </div>
     );
-  // render data
   return (
     <>
       <Head>
@@ -60,47 +77,54 @@ const Home = () => {
       {user && (
         <Container maxW="xl" pt={100}>
           <Heading pb={6}>📦 Ship packages</Heading>
-          <Text pb={9}>
+          <Text pb={17}>
             Use this page to go through the shipment procedure.
           </Text>
-          <hr style={{ paddingBottom: "10px", paddingTop: "10px", paddingBottom: "10px" }} />
-          <Accordion allowMultiple>
-            <AccordionItem borderTopWidth="0px">
-              <AccordionButton paddingLeft={0} pt={3} pb={3}>
-                <Box flex="1" textAlign="left">
-                  1. Review Information
-                </Box>
-              </AccordionButton>
-              <AccordionPanel pb={4} pl={0} pt={0}>
-                <hr style={{ paddingBottom: "10px", paddingTop: "10px" }} />
-                <div>
-                  <strong>Name: </strong>{data.name}!
-                  
-                </div>
-              </AccordionPanel>
-            </AccordionItem>
+          <SimpleGrid columns={2} spacing={10}>
+            <Box
+              borderWidth="1px"
+              borderRadius="lg"
+              padding={submitted ? 5 : 5}
+            >
+              <Heading as="h3" size="md" pb={4}>
+                Pack the package
+              </Heading>
+              {data.package.items.map((item) => (
+                <Text>
+                  {item.quantity} x {item.item}
+                </Text>
+              ))}
+            </Box>
+            <Box
+              borderWidth="1px"
+              borderRadius="lg"
+              padding={submitted ? 5 : 5}
+            >
+              <Heading as="h3" size="md" pb={2}>
+                Ship the package
+              </Heading>
+              <ol style={{ paddingLeft: "25px", paddingTop: "5px" }}>
+                <li style={{ paddingBottom: "5px" }}>
+                  Begin by printing the shipping label.
+                </li>
+                <li style={{ paddingBottom: "5px" }}>
+                  Stick the shipping label on the box.
+                </li>
+                <li style={{ paddingBottom: "5px" }}>
+                  Done! Click the confirm button that shall pop up.
+                </li>
+              </ol>
+              
+              <ReactToPrint
+                trigger={() => <Button onClick={() => setSubmitted(true)}>Print</Button>}
+                content={() => componentRef.current}
+              />
+              <div style={{ display: "none" }}>
+                <ComponentToPrint ref={componentRef} />
+              </div>
+            </Box>
+          </SimpleGrid>
 
-            <AccordionItem isDisabled={true}>
-              <AccordionButton paddingLeft={0} pt={3} pb={3}>
-                <Box flex="1" textAlign="left">
-                  Section 1 title
-                </Box>
-              </AccordionButton>
-              <AccordionPanel pb={4} pl={0} pt={0}>
-                <hr style={{ paddingBottom: "10px", paddingTop: "10px" }} />
-                <div>
-                  hello {data.name}!{" "}
-                  <Button
-                    onClick={() => {
-                      mutate("/api/send");
-                    }}
-                  >
-                    Revalidate
-                  </Button>
-                </div>
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
           <hr style={{ marginBottom: "10px", marginTop: "20px" }} />
           <Text>
             © Asclepius 2020{"⠀"}|{"⠀"}
