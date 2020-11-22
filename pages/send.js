@@ -43,6 +43,7 @@ class ComponentToPrint extends React.PureComponent {
       <img src="https://easypost-files.s3-us-west-2.amazonaws.com/files/postage_label/20201119/69c72a2cae304c97afc10279b31cb279.png" />
       <Box>
         <h1 style={{ fontWeight: '800', fontSize: '40px'}}>SCAN THIS QR CODE TO SUBMIT DATA.</h1>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example" />
       </Box>
     </SimpleGrid>)
   }
